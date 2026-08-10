@@ -19,6 +19,10 @@ For full install instructions, see the
 [CodeRunner install instructions](https://github.com/trampgeek/moodle-qtype_coderunner/blob/master/Readme.md).
 
 ## CHANGE HISTORY
+10/08/26. V1.4.7. Bug fix: when grading failed because the sandbox was unreachable or crashed
+(question state $invalid), get_state_string() was deriving a status purely from the raw
+fraction of the last try, wrongly reporting "Incorrect" even though no grading had actually
+completed. It now correctly reports that an unexpected error occurred.
 22/07/26. V1.4.6. Bug fix: Precheck and Stop buttons were not initiating a scroll back to saved position.
 10/05/26. V1.4.5. Bug fix: module was using a defunct interface call to initialise submit buttons, causing behat failures in Moodle 5.2.
 29/01/25. V1.4.4. Bug fix Regrade Error with "Each attempt builds on the last" = "Yes" and Updated CodeRunner Question Version (Issue CodeRunner issue #236). 

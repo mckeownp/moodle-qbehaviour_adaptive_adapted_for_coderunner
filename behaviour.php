@@ -99,6 +99,23 @@ class qbehaviour_adaptive_adapted_for_coderunner extends qbehaviour_adaptive {
             return get_string('precheckresults', 'qbehaviour_adaptive_adapted_for_coderunner');
         }
 
+        // The parent (adaptive) implementation derives a state purely from
+        // the _try/_rawfraction behaviour vars, which are set even when
+        // grading itself failed (state $invalid, e.g. sandbox unreachable
+        // during a finish-time grade or regrade). That makes it wrongly
+        // report "Incorrect" for a submission that was never actually
+        // graded. Handle that case here first.
+        if ($this->qa->get_state() == question_state::$invalid) {
+            $testoutcomeserialised = $laststep->get_qt_var('_testoutcome');
+            if ($testoutcomeserialised) {
+                $testoutcome = @unserialize($testoutcomeserialised);
+                if ($testoutcome instanceof qtype_coderunner_testing_outcome && $testoutcome->run_failed()) {
+                    return get_string('unknownerror', 'qtype_coderunner');
+                }
+            }
+            return $this->qa->get_state()->default_string($showcorrectness);
+        }
+
         return parent::get_state_string($showcorrectness);
     }
 
